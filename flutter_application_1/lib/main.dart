@@ -1,43 +1,70 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_application_1/screens/pageA.dart';
+import 'package:flutter_application_1/screens/pageB.dart';
+import 'package:flutter_application_1/screens/pageC.dart';
 
-void main() {
-  runApp(const MyApp());
+
+void main(){
+  const app=MaterialApp(home:Root());
+
+  //プロバイダーでアプリを囲む
+  const scope=ProviderScope(child:app);
+
+  runApp(scope);
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+//プロバイダー
+final indexProvider=StateProvider((ref){
+  return 0;
+});
+
+class Root extends ConsumerWidget {
+  const Root({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Red Circle',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+  Widget build(BuildContext context,WidgetRef ref){
+
+    //インデックス
+    final index=ref.watch(indexProvider);
+
+    const items=[
+      BottomNavigationBarItem(
+        icon: Icon(Icons.restaurant),
+        label:'献立',
       ),
-      home: const CircleScreen(),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.home),
+        label:'ホーム',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.account_circle),
+        label:'アカウント',
+      ),
+    ];
+
+    final bar=BottomNavigationBar(
+      items: items,
+      backgroundColor: const Color.fromARGB(255, 234, 255, 193),
+      selectedItemColor: const Color.fromARGB(255, 255, 181, 71),
+      unselectedItemColor: const Color.fromARGB(255, 29, 52, 127),
+      currentIndex: index,
+      onTap:(index){
+        //タップ時にindex変更
+        ref.read(indexProvider.notifier).state=index;
+      },
     );
-  }
-}
 
-class CircleScreen extends StatelessWidget {
-  const CircleScreen({super.key});
+    const pages=[
+      PageA(),
+      PageB(),
+      PageC(),
+    ];
 
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Red Circle'),
-      ),
-      body: Center(
-        child: Container(
-          width: 100.0,  // 丸の直径
-          height: 100.0, // 丸の直径
-          decoration: BoxDecoration(
-            color: Colors.red,  // 丸の色
-            shape: BoxShape.circle,  // 丸の形状
-          ),
-        ),
-      ),
+      body:pages[index],
+      bottomNavigationBar: bar,
     );
+    
   }
 }
