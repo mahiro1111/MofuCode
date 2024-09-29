@@ -1,4 +1,4 @@
-//新規登録
+//ログイン
 import 'package:flutter/material.dart';
 
 void main() {
@@ -35,7 +35,7 @@ class SignupScreen extends StatelessWidget {
               size: 30,
             ),
           const Spacer(), 
-          const Text('新規登録'),
+          const Text('ログイン'),
           const Spacer(), 
           ],
         ),
@@ -45,19 +45,6 @@ class SignupScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: <Widget>[
-            // 名前入力フィールド
-            TextField(
-              decoration: const InputDecoration(
-                prefixIcon: Icon(
-                  Icons.account_circle,
-                ),
-                labelText: 'Name',
-                border: OutlineInputBorder(),
-                filled: true,
-                fillColor: Color(0xFFF7FFd8),
-              ),
-            ),
-            const SizedBox(height: 16),
             // メール入力フィールド
             TextField(
               decoration: const InputDecoration(
@@ -87,7 +74,7 @@ class SignupScreen extends StatelessWidget {
             const SizedBox(height: 24),
             // 登録ボタン
             SizedBox(
-              width: double.infinity, // ボタンが横幅いっぱいになる
+              width: double.infinity, 
               child: ElevatedButton(
                 onPressed: () {
                   // ボタンが押されたときの処理
@@ -96,7 +83,7 @@ class SignupScreen extends StatelessWidget {
                   backgroundColor: Color(0xFFF9FACA), // ボタンの背景色
                   foregroundColor: Color(0xFF4b4b4b),  // ボタンのテキストカラー
                 ),
-                child: const Text('Sign Up'),
+                child: const Text('login'),
               ),
             ),
           ],
