@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_application_1/screens/pageA.dart';
+import 'package:flutter_application_1/screens/recipi.dart';
 import 'package:flutter_application_1/screens/pageB.dart';
 import 'package:flutter_application_1/screens/pageC.dart';
 
@@ -56,7 +56,7 @@ class Root extends ConsumerWidget {
     );
 
     const pages=[
-      PageA(),
+      Recipi(),
       PageB(),
       PageC(),
     ];
