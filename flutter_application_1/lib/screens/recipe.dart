@@ -3,23 +3,25 @@ import 'package:flutter/material.dart';
 //献立提示とレシピ表示
 /// 馬のモデルクラス
 class Recipe {
-  // 名前
-  final String name;
+  // step数
+  final String number;
+  //調理工程
+  final String step;
 
   // コンストラクタ
-  Recipe(this.name);
+  Recipe(this.number,this.step);
 }
 
 /// カードにしたいモデルたち
 final models = [
-  Recipe('ナリタブライアン'),
-  Recipe('スペシャルウィーク'),
-  Recipe('オグリキャップ'),
-  Recipe('サイレンススズカ'),
-  Recipe('トウカイテイオー'),
+  Recipe('1','ナリタブライアン'),
+  Recipe('2','スペシャルウィーク'),
+  Recipe('3','オグリキャップ'),
+  Recipe('4','サイレンススズカ'),
+  Recipe('5','トウカイテイオー'),
 ];
 
-/// 馬のカード Widget
+/// レシピのカード Widget
 class RecipeCard extends StatelessWidget {
   const RecipeCard({
     super.key,
@@ -30,18 +32,40 @@ class RecipeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  
-    // 名前
-    final text = Text(
-      model.name,
-      style: const TextStyle(fontSize: 20),
+    //ステップ数
+    final step_number=Container(
+      padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
+      child:Align(
+        alignment: Alignment.topLeft,
+        child:Text(
+          'Step' + model.number,
+          style: TextStyle(
+            decoration: TextDecoration.underline,
+            decorationStyle: TextDecorationStyle.dotted,
+            fontSize: 40,
+          )
+        ),
+        )
+      );
+
+    // 工程
+    final step_text = Container(
+      padding: EdgeInsets.only(top: 30),
+      child:Align(
+        alignment: Alignment.topCenter,
+        child: Text(
+          model.step,
+          style: const TextStyle(fontSize: 20),
+        ) 
+      )
     );
 
     // 画像と名前を縦に並べる
     final imgAndText = Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        text,
+        step_number,
+        step_text,
       ],
     );
 
@@ -118,5 +142,3 @@ class Cook extends StatelessWidget {
     );
   }
 }
-
-//あいうえお
