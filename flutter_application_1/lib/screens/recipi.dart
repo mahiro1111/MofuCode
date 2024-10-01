@@ -2,44 +2,35 @@ import 'package:flutter/material.dart';
 
 //献立提示とレシピ表示
 /// 馬のモデルクラス
-class Horse {
+class Recipi {
   // 名前
   final String name;
-  // アイコン画像
-  final String iconUri;
 
   // コンストラクタ
-  Horse(this.name, this.iconUri);
+  Recipi(this.name);
 }
 
 /// カードにしたいモデルたち
 final models = [
-  Horse('ナリタブライアン', 'horse1.png'),
-  Horse('スペシャルウィーク', 'horse2.png'),
-  Horse('オグリキャップ', 'horse3.png'),
-  Horse('サイレンススズカ', 'horse4.png'),
-  Horse('トウカイテイオー', 'horse5.png'),
+  Recipi('ナリタブライアン'),
+  Recipi('スペシャルウィーク'),
+  Recipi('オグリキャップ'),
+  Recipi('サイレンススズカ'),
+  Recipi('トウカイテイオー'),
 ];
 
 /// 馬のカード Widget
-class HorseCard extends StatelessWidget {
-  const HorseCard({
+class RecipiCard extends StatelessWidget {
+  const RecipiCard({
     super.key,
     required this.model,
   });
   // データが入ったモデル
-  final Horse model;
+  final  Recipi model;
 
   @override
   Widget build(BuildContext context) {
-    // 画像
-    final img = SizedBox(
-      height: 100,
-      child: Image.asset(
-        'assets/images/${model.iconUri}',
-      ),
-    );
-
+  
     // 名前
     final text = Text(
       model.name,
@@ -50,7 +41,6 @@ class HorseCard extends StatelessWidget {
     final imgAndText = Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        img,
         text,
       ],
     );
@@ -59,7 +49,7 @@ class HorseCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         // 色
-        color: Colors.orange,
+        color: const Color.fromARGB(255, 255, 247, 210),
         // 角丸
         borderRadius: BorderRadius.circular(20),
         // 影
@@ -79,20 +69,20 @@ class HorseCard extends StatelessWidget {
 }
 
 // モデル => ウィジェット に変換する関数
-Widget modelToWidget(Horse model) {
+Widget modelToWidget(Recipi model) {
   // ページの部分
   return Container(
     // カードの周りに 10 ずつスペースを空ける
     padding: const EdgeInsets.all(10),
     // 中身は カード
-    child: HorseCard(model: model),
+    child: RecipiCard(model: model),
   );
   // カードを使う
 }
 
 // ホーム画面
-class Recipi extends StatelessWidget {
-  const Recipi({super.key});
+class Cook extends StatelessWidget {
+  const Cook({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +91,7 @@ class Recipi extends StatelessWidget {
       // カルーセルのコントローラー
       controller: PageController(
         // 左右のカードがどのくらい見えるかのバランスを決める
-        viewportFraction: 0.6,
+        viewportFraction: 0.8,
       ),
       // カードの数 = モデルの数
       itemCount: models.length,
@@ -112,10 +102,12 @@ class Recipi extends StatelessWidget {
     // 画面
     return Scaffold(
       // 真ん中
-      body: Center(
+      body: Align(
+        alignment: Alignment.topCenter,
         // 横長のコンテナ
         child: Container(
-          height: 200,
+          margin:EdgeInsets.only(top:100),
+          height: 500,
           color: Colors.white,
           child: carousel,
         ),
