@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_application_1/screens/recipi.dart';
+import 'package:flutter_application_1/screens/recipe.dart';
 import 'package:flutter_application_1/screens/nutritional_management/management.dart';
 import 'package:flutter_application_1/screens/pageB.dart';
-import 'package:flutter_application_1/screens/pageC.dart';
-
 
 void main(){
   const app=MaterialApp(home:Root());
@@ -69,7 +67,7 @@ class Root extends ConsumerWidget {
       PageB(),
       PageB(),
       Management(),
-      PageC(),
+      PageB(),
     ];
 
     return Scaffold(

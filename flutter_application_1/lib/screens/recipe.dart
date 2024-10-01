@@ -2,31 +2,31 @@ import 'package:flutter/material.dart';
 
 //献立提示とレシピ表示
 /// 馬のモデルクラス
-class Recipi {
+class Recipe {
   // 名前
   final String name;
 
   // コンストラクタ
-  Recipi(this.name);
+  Recipe(this.name);
 }
 
 /// カードにしたいモデルたち
 final models = [
-  Recipi('ナリタブライアン'),
-  Recipi('スペシャルウィーク'),
-  Recipi('オグリキャップ'),
-  Recipi('サイレンススズカ'),
-  Recipi('トウカイテイオー'),
+  Recipe('ナリタブライアン'),
+  Recipe('スペシャルウィーク'),
+  Recipe('オグリキャップ'),
+  Recipe('サイレンススズカ'),
+  Recipe('トウカイテイオー'),
 ];
 
 /// 馬のカード Widget
-class RecipiCard extends StatelessWidget {
-  const RecipiCard({
+class RecipeCard extends StatelessWidget {
+  const RecipeCard({
     super.key,
     required this.model,
   });
   // データが入ったモデル
-  final  Recipi model;
+  final  Recipe model;
 
   @override
   Widget build(BuildContext context) {
@@ -69,13 +69,13 @@ class RecipiCard extends StatelessWidget {
 }
 
 // モデル => ウィジェット に変換する関数
-Widget modelToWidget(Recipi model) {
+Widget modelToWidget(Recipe model) {
   // ページの部分
   return Container(
     // カードの周りに 10 ずつスペースを空ける
-    padding: const EdgeInsets.all(10),
+    padding: const EdgeInsets.fromLTRB(10,100,10,250),
     // 中身は カード
-    child: RecipiCard(model: model),
+    child: RecipeCard(model: model),
   );
   // カードを使う
 }
@@ -106,9 +106,12 @@ class Cook extends StatelessWidget {
         alignment: Alignment.topCenter,
         // 横長のコンテナ
         child: Container(
-          margin:EdgeInsets.only(top:100),
-          height: 500,
-          color: Colors.white,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('images/background_sample.jpg'),
+              fit: BoxFit.cover,
+            )
+          ),
           child: carousel,
         ),
       ),
