@@ -9,18 +9,23 @@ class Management extends StatefulWidget {
   State<StatefulWidget> createState() => _ManagementState();
 }
 
-class _ManagementState extends State<Management> {
-  final labels = List<DataColumn>.generate(
-      3, (int index) => DataColumn(label: Text("ラベル$index")),
-      growable: false);
+// 表で表示するラベルの名前
+final nutrients = ["タンパク質", "炭水化物", "脂質"];
+final labelNames = ["栄養素", "数値"];
 
-  final values = List<DataRow>.generate(10, (int index) {
+class _ManagementState extends State<Management> {
+  // 表の列ラベルを生成
+  final labels = List<DataColumn>.generate(
+      2, (int index) => DataColumn(label: Text(labelNames[index])),
+      growable: false); // カラム名（栄養素と数値）の配列を生成
+
+  // 表の各行データを生成
+  final values = List<DataRow>.generate(3, (int index) {
     return DataRow(cells: [
-      DataCell(Text("山田$index郎")),
-      const DataCell(Text("男性")),
-      const DataCell(Text("2000/10/30")),
+      DataCell(Text(nutrients[index])),
+      DataCell(Text("${(index + 1) * 100}グラム")),
     ]);
-  }, growable: false);
+  }, growable: false); // 栄養素のリストと量を対応付けて行を生成
 
   @override
   Widget build(BuildContext context) {
@@ -29,49 +34,47 @@ class _ManagementState extends State<Management> {
         title: const Text('栄養管理'),
         actions: <Widget>[
           IconButton(
-            icon: const Icon(Icons.calendar_month),
+            icon: const Icon(Icons.calendar_month), // カレンダーアイコン
             onPressed: () {
+              // カレンダーを表示するためのモーダルを開く
               showModalBottomSheet(
                   context: context,
                   builder: (BuildContext context) {
-                    return const Calendar();
+                    return const Calendar(); // カレンダーウィジェットを表示
                   });
             },
           ),
         ],
       ),
-      backgroundColor: Colors.blue[200],
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            RadarChartSample1(),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.yellow[100],
-                borderRadius: BorderRadius.circular(16),
+      // 背景画像を全体のContainerに設定
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('images/background_sample.jpg'), // 背景画像
+            fit: BoxFit.cover, // 画像を画面全体にカバー
+          ),
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              RadarChartSample1(), // レーダーチャートウィジェットを表示
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.yellow[100],
+                  borderRadius: BorderRadius.circular(16), // 角を丸くする
+                ),
+                padding: const EdgeInsets.all(8.0),
+                margin: const EdgeInsets.all(20),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal, // 横スクロールを有効に
+                  child: DataTable(
+                      columns: labels, rows: values), // DataTableで栄養素と数値を表示
+                ),
               ),
-              padding: const EdgeInsets.all(8.0),
-              margin: const EdgeInsets.all(20),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal, // 横スクロールを有効に
-                child: DataTable(columns: labels, rows: values),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    );
-  }
-
-  Widget _table(List<DataColumn> columnList, List<DataRow> rowList) {
-    // ListViewで縦スクロール, SingleChildScrollViewで横スクロール設定している
-    return ListView(
-      children: [
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: DataTable(columns: columnList, rows: rowList),
-        )
-      ],
     );
   }
 }

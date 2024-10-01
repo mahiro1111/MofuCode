@@ -5,8 +5,8 @@ class RadarChartSample1 extends StatefulWidget {
   RadarChartSample1({super.key});
 
   // グリッド、タイトル、ラインの色をプロパティとして定義
-  final gridColor = Colors.white70;
-  final textColor = Colors.yellow[50];
+  final gridColor = Colors.grey;
+  final textColor = Colors.black54;
   final lineColor = Colors.green;
 
   @override
@@ -39,8 +39,8 @@ class _RadarChartSample1State extends State<RadarChartSample1> {
               RadarChartData(
                 dataSets: showingDataSets(),
                 radarBorderData: BorderSide(color: widget.gridColor),
-                
-                titlePositionPercentageOffset: 0.1,
+                // タイトルの位置設定
+                titlePositionPercentageOffset: 0.2,
                 titleTextStyle:
                     TextStyle(
                       color: widget.textColor,
@@ -55,7 +55,7 @@ class _RadarChartSample1State extends State<RadarChartSample1> {
                     case 2:
                       return const RadarChartTitle(text: '脂質');
                     case 1:
-                      return const RadarChartTitle(text: '糖質');
+                      return const RadarChartTitle(text: '炭水化物');
                     default:
                       return const RadarChartTitle(text: '');
                   }
