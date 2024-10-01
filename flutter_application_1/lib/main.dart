@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_application_1/screens/recipi.dart';
+import 'package:flutter_application_1/screens/nutritional_management/management.dart';
 import 'package:flutter_application_1/screens/pageB.dart';
 import 'package:flutter_application_1/screens/pageC.dart';
 
@@ -34,8 +35,16 @@ class Root extends ConsumerWidget {
         label:'献立',
       ),
       BottomNavigationBarItem(
+        icon: Icon(Icons.edit_square),
+        label:'記録',
+      ),
+      BottomNavigationBarItem(
         icon: Icon(Icons.home),
         label:'ホーム',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.timeline),
+        label:'栄養管理',
       ),
       BottomNavigationBarItem(
         icon: Icon(Icons.account_circle),
@@ -58,6 +67,8 @@ class Root extends ConsumerWidget {
     const pages=[
       Cook(),
       PageB(),
+      PageB(),
+      Management(),
       PageC(),
     ];
 
