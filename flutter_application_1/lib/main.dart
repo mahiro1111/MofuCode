@@ -56,7 +56,7 @@ class Root extends ConsumerWidget {
     );
 
     const pages=[
-      Recipi(),
+      Cook(),
       PageB(),
       PageC(),
     ];
