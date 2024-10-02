@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'MofuCode',
+      title: 'MofuCode_registration',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -30,18 +30,27 @@ class SignupScreen extends StatelessWidget {
         backgroundColor: Color(0xFFF7FFd8),
         title: Row(
           children: [
-            Icon(
-              Icons.arrow_back_ios,
-              size: 30,
+            IconButton(
+              icon: Icon(Icons.arrow_back_ios, size: 30),
+              onPressed: () {
+                Navigator.pop(context);  // これで前の画面に戻れます
+              },
             ),
-          const Spacer(), 
-          const Text('新規登録'),
-          const Spacer(), 
+            const Spacer(),
+            const Text('新規登録'),
+            const Spacer(),
           ],
         ),
       ),
-      backgroundColor: Color(0xFF7ed5ff), 
-      body: Padding(
+      
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('images/background_sample.jpg'), // 背景画像を指定
+            fit: BoxFit.cover,  // 画像を画面全体に広げる
+          ),
+        ),
+
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: <Widget>[
@@ -84,6 +93,63 @@ class SignupScreen extends StatelessWidget {
                 fillColor: Color(0xFFF7FFd8),
               ),
             ),
+                        const SizedBox(height: 16),
+            // 年齢入力フィールド
+            TextField(
+              obscureText: true,
+              decoration: const InputDecoration(
+                prefixIcon: Icon(
+                  Icons.person,
+                ),
+                labelText: 'Age',
+                border: OutlineInputBorder(),
+                filled: true,
+                fillColor: Color(0xFFF7FFd8),
+              ),
+            ),
+            const SizedBox(height: 16),
+            // 体重入力フィールド
+            TextField(
+              obscureText: true,
+              decoration: const InputDecoration(
+                prefixIcon: Icon(
+                  Icons.monitor_weight,
+                ),
+                labelText: 'Weight',
+                border: OutlineInputBorder(),
+                filled: true,
+                fillColor: Color(0xFFF7FFd8),
+              ),
+            ),
+            const SizedBox(height: 16),
+            // 身長入力フィールド
+            TextField(
+              obscureText: true,
+              decoration: const InputDecoration(
+                prefixIcon: Icon(
+                  Icons.height,
+                ),
+                labelText: 'Height',
+                border: OutlineInputBorder(),
+                filled: true,
+                fillColor: Color(0xFFF7FFd8),
+              ),
+            ),
+            const SizedBox(height: 16),
+            // 性別入力フィールド
+            TextField(
+              obscureText: true,
+              decoration: const InputDecoration(
+                prefixIcon: Icon(
+                  Icons.wc,
+                ),
+                labelText: 'Gender',
+                border: OutlineInputBorder(),
+                filled: true,
+                fillColor: Color(0xFFF7FFd8),
+              ),
+            ),
+
             const SizedBox(height: 24),
             // 登録ボタン
             SizedBox(
