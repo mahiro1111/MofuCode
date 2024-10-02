@@ -11,17 +11,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'MofuCode',
+      title: 'MofuCode_login',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const SignupScreen(),
+      home: const LoginScreen(),
     );
   }
 }
 
-class SignupScreen extends StatelessWidget {
-  const SignupScreen({super.key});
+class LoginScreen extends StatelessWidget {
+  const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) { 
@@ -30,18 +30,27 @@ class SignupScreen extends StatelessWidget {
         backgroundColor: Color(0xFFF7FFd8),
         title: Row(
           children: [
-            Icon(
-              Icons.arrow_back_ios,
-              size: 30,
+            IconButton(
+              icon: Icon(Icons.arrow_back_ios, size: 30),
+              onPressed: () {
+                Navigator.pop(context);  // これで前の画面に戻れます
+              },
             ),
-          const Spacer(), 
-          const Text('ログイン'),
-          const Spacer(), 
+            const Spacer(),
+            const Text('ログイン'),
+            const Spacer(),
           ],
         ),
       ),
-      backgroundColor: Color(0xFF7ed5ff), 
-      body: Padding(
+
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('images/background_sample.jpg'), // 背景画像を指定
+            fit: BoxFit.cover,  // 画像を画面全体に広げる
+          ),
+        ),
+
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: <Widget>[
