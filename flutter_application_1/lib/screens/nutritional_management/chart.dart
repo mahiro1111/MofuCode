@@ -2,7 +2,17 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class RadarChartSample1 extends StatefulWidget {
-  RadarChartSample1({super.key});
+  // APIから取得したデータをコンストラクタで受け取る
+  final double protein;
+  final double carbohydrates;
+  final double lipid;
+
+  const RadarChartSample1({
+    super.key,
+    required this.protein,
+    required this.carbohydrates,
+    required this.lipid,
+  });
 
   // グリッド、タイトル、ラインの色をプロパティとして定義
   final gridColor = Colors.grey;
@@ -96,9 +106,9 @@ class _RadarChartSample1State extends State<RadarChartSample1> {
       RawDataSet(
         color: widget.lineColor,
         values: [
-          300,
-          50,
-          250,
+          widget.protein,
+          widget.carbohydrates,
+          widget.lipid,
         ],
       ),
     ];
