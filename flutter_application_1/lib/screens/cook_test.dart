@@ -168,8 +168,6 @@ class RecipeDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    const CharacterImage='images/abatar.png';
-
     return Scaffold(
       appBar: AppBar(title: Text(title)),
       body: Container(

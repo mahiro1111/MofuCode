@@ -12,7 +12,7 @@ class PageB extends StatelessWidget {
       backgroundColor: Colors.green[100],
       body: const Center(
         child: Text(
-          '画面 B',
+          'ユーザー画面',
           style: TextStyle(
             // 文字の大きさ
             fontSize: 20,

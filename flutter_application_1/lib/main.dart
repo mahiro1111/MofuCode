@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/screens/cook.dart';
 import 'package:flutter_application_1/screens/input.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_application_1/screens/nutritional_management/management.dart';
-import 'package:flutter_application_1/screens/pageB.dart';
+import 'package:flutter_application_1/screens/sample.dart';
 import 'package:flutter_application_1/screens/login.dart'; 
 import 'package:flutter_application_1/screens/home.dart'; 
 
@@ -81,7 +82,7 @@ class HomeScreen extends ConsumerWidget {
 
     const pages = [
       CookScreen(),
-      PageB(),
+      Input(),
       Home(),
       Management(),
       PageB(),

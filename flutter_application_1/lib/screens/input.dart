@@ -1,49 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:flutter_application_1/screens/Cook.dart';
 
-// ButtonScreenで表示するクラス
-class CookScreen extends StatefulWidget {
-  const CookScreen({super.key});
+class Input extends StatefulWidget {
+  const Input({super.key});
 
   @override
-  _CookScreenState createState() => _CookScreenState();
+  _InputState createState() => _InputState();
 }
 
-class _CookScreenState extends State<CookScreen> {
-  List<String> recipeTitles = [];
-  List<String> recipeContents = [];
-  bool isLoading = true; // ローディング状態を管理する変数
-
-  // APIからレシピ情報を取得するメソッド
-  Future<void> fetchRecipes() async {
-    final response = await http.get(
-      Uri.parse('https://your_api_url.com/recommend'), // APIのエンドポイント
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer your_access_token", // 認証が必要ならトークンを指定
-      },
-    );
-
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      setState(() {
-        recipeTitles = List<String>.from(data['recipe_titles']); // レシピタイトルを取得
-        recipeContents = List<String>.from(data['recipe_contents']); // レシピ詳細を取得
-        isLoading = false; // データ取得完了
-      });
-    } else {
-      print('Failed to load recipes');
-      setState(() {
-        isLoading = false; // エラー発生時もローディングを終了
-      });
-    }
-  }
+class _InputState extends State<Input> {
+  bool _showTextField = false; // 入力欄を表示するかどうかのフラグ
+  final TextEditingController _textController = TextEditingController(); // 料理名を入力するためのコントローラー
 
   @override
-  void initState() {
-    super.initState();
-    fetchRecipes(); // 初期化時にAPIを呼び出す
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
   }
 
   @override
@@ -57,9 +29,9 @@ class _CookScreenState extends State<CookScreen> {
         color: Colors.lightBlueAccent,
         borderRadius: BorderRadius.circular(15.0),
       ),
-      child: Text(
-        '''ぼくからのおすすめだよ！''',
-        style: const TextStyle(color: Colors.white),
+      child: const Text(
+        '''何食べたの～？''',
+        style: TextStyle(color: Colors.white),
       ),
     );
 
@@ -76,7 +48,7 @@ class _CookScreenState extends State<CookScreen> {
     );
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Recipe Titles')),
+      appBar: AppBar(title: const Text('食事管理')),
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
@@ -85,81 +57,51 @@ class _CookScreenState extends State<CookScreen> {
           ),
         ),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Expanded(
-              child: isLoading // ローディング状態の判定
-                  ? Center(child: CircularProgressIndicator()) // ローディングインジケーターを表示
-                  : ListView.builder(
-                      itemCount: recipeTitles.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 16.0),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              // ボタンが押されたときに詳細画面に遷移
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => RecipeDetailScreen(
-                                    title: recipeTitles[index],
-                                    content: recipeContents[index],
-                                  ),
-                                ),
-                              );
-                            },
-                            child: Text(recipeTitles[index]), // ボタンにレシピのタイトルを表示
-                          ),
-                        );
-                      },
-                    ),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  _showTextField = !_showTextField; // ボタン押下で入力欄の表示を切り替え
+                });
+              },
+              child: _showTextField
+                  ? const Text('入力をキャンセル')
+                  : const Text('料理名を入力'),
             ),
-            TalkCharacter,
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// 詳細画面を表示するクラス
-class RecipeDetailScreen extends StatelessWidget {
-  final String title;
-  final String content;
-
-  const RecipeDetailScreen({super.key, required this.title, required this.content});
-
-  @override
-  Widget build(BuildContext context) {
-
-    return Scaffold(
-      appBar: AppBar(title: Text(title)),
-      body: Container(
-        // 画面全体のサイズを取得
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('images/background_sample.jpg'), // 背景画像を指定
-            fit: BoxFit.cover, // 背景画像を画面全体に広げる
-          ),
-        ),
-        // テキスト部分をスクロール可能にする
-        child: Column(
-          children: [
-            SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      content, // レシピの内容を表示
-                      style: const TextStyle(fontSize: 18, color: Color.fromARGB(255, 0, 0, 0)),
-                    ),
-                  ],
+            if (_showTextField) // 入力欄を表示するかどうか
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: TextField(
+                  controller: _textController,
+                  decoration: const InputDecoration(
+                    labelText: '料理名',
+                    border: OutlineInputBorder(),
+                  ),
                 ),
               ),
+            ElevatedButton(
+              onPressed: () {
+                // 料理名を表示する画面へ遷移
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CookScreen(),
+                  ),
+                );
+              },
+              child: const Text('料理名を決定'),
             ),
+            ElevatedButton(
+              onPressed: (){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder:(context)=>const CookScreen()),
+                );
+              }, 
+              child: const Text('まだ食べてない…')
+            ),
+            TalkCharacter,
           ],
         ),
       ),
