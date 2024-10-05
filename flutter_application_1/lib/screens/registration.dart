@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-//import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -21,21 +20,28 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _heightController = TextEditingController();
   final TextEditingController _genderController = TextEditingController();
 
-  Future<String> getCsrfToken() async {
-    try {
-      final response = await http.get(
-        Uri.parse('http://b316-124-141-217-229.ngrok-free.app/users/csrf_token'),
-      );
+  String _csrfToken = ''; // CSRFトークンを保存する変数
 
-      if (response.statusCode == 200) {
-        final responseData = jsonDecode(response.body);
-        return responseData['csrf_token'];
-      } else {
-        print('CSRFトークンの取得に失敗しました: ${response.statusCode}, ${response.body}');
-        throw Exception('CSRFトークンの取得に失敗しました: ${response.statusCode}');
-      }
+  @override
+  void initState() {
+    super.initState();
+    fetchCsrfToken(); // アプリ起動時にCSRFトークンを取得
+  }
+
+  Future<void> fetchCsrfToken() async {
+    try {
+      final response =
+        await http.get(Uri.parse('https://your-server-url/csrf_token'));
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+      setState(() {
+        _csrfToken = responseData['csrf_token']; // トークンを変数に格納
+      });
+    } else {
+      print('CSRFトークンの取得に失敗しました: ${response.statusCode}, ${response.body}');
+      throw Exception('CSRFトークンの取得に失敗しました: ${response.statusCode}');
+    }
     } catch (e) {
-      print('エラーが発生しました: $e');
       throw Exception('エラーが発生しました: $e');
     }
   }
@@ -51,18 +57,15 @@ class _SignupScreenState extends State<SignupScreen> {
     final String gender = _genderController.text;
 
     // APIのURL
-    const apiUrl = 'https://b316-124-141-217-229.ngrok-free.app/users';
+    const apiUrl = 'https://460e-133-203-160-33.ngrok-free.app/users';
 
     try {
-      // CSRFトークンを取得
-      final csrfToken = await getCsrfToken();
-
       // リクエストボディを作成
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
           "Content-Type": "application/json",
-          "X-CSRF-Token": csrfToken,
+          "X-CSRF-Token": _csrfToken,
         },
         body: jsonEncode({
           "username": name,
@@ -79,10 +82,6 @@ class _SignupScreenState extends State<SignupScreen> {
       if (response.statusCode == 201) {
         // 登録成功
         final responseData = jsonDecode(response.body);
-        String token = responseData['token'];
-
-        // トークンをセキュアストレージに保存する（以後のリクエストで使うため）
-        //await const FlutterSecureStorage().write(key: 'auth_token', value: token);
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('登録成功: ${responseData['message']}')),

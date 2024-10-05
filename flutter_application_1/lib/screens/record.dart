@@ -22,7 +22,7 @@ class _RecordState extends State<Record> {
     final String foodItem = _foodItemController.text;
 
     // APIのURL
-    const apiUrl = 'https://b316-124-141-217-229.ngrok-free.app/meals';
+    const apiUrl = 'https://460e-133-203-160-33.ngrok-free.app/meals';
 
     try {
       // リクエストボディを作成
@@ -190,7 +190,6 @@ class _RecordState extends State<Record> {
                 Container(
                   width: 300,
                   height: 300,
-                  margin: const EdgeInsets.only(right: 35),
                   child: Image.asset(
                     'images/abatar.png',
                   ),
