@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class Record extends StatefulWidget {
   const Record({super.key});
@@ -11,8 +13,53 @@ class _RecordState extends State<Record> {
   var _choiceIndex = 0;
 
   // コントローラでテキストフィールドの値を取得
+  final TextEditingController _mealTypeController = TextEditingController();
   final TextEditingController _foodItemController = TextEditingController();
-  //final TextEditingController _mealTimeController = TextEditingController();
+
+  // APIにデータを送信する関数
+  Future<void> _record() async {
+    final String mealType = _mealTypeController.text;
+    final String foodItem = _foodItemController.text;
+
+    // APIのURL
+    const apiUrl = 'https://b316-124-141-217-229.ngrok-free.app/meals';
+
+    try {
+      // リクエストボディを作成
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode({
+          "meal_type": mealType,
+          "food_items": foodItem,
+        }),
+      );
+
+      // ステータスコードを確認してレスポンスを処理
+      if (response.statusCode == 201) {
+        // 登録成功
+        final responseData = jsonDecode(response.body);
+        String token = responseData['token'];
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('登録成功: ${responseData['message']}')),
+        );
+      } else {
+        // 登録失敗
+        final responseData = jsonDecode(response.body);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('登録失敗: ${responseData['error']}')),
+        );
+      }
+    } catch (e) {
+      // エラーハンドリング
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('エラーが発生しました: $e')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +71,6 @@ class _RecordState extends State<Record> {
           // 画面全体をタップ可能にするためのGestureDetector
           onTap: () {
             setState(() {
-              _choiceIndex = 0; // 画面全体をタップしたときに選択解除
               FocusScope.of(context).unfocus();
             });
           },
@@ -54,6 +100,7 @@ class _RecordState extends State<Record> {
                         onSelected: (_) {
                           setState(() {
                             _choiceIndex = 1;
+                            _mealTypeController.text = "breakfast"; // 選択した値をコントローラーに設定
                           });
                         },
                       ),
@@ -65,6 +112,7 @@ class _RecordState extends State<Record> {
                         onSelected: (_) {
                           setState(() {
                             _choiceIndex = 2;
+                            _mealTypeController.text = "lunch"; // 選択した値をコントローラーに設定
                           });
                         },
                       ),
@@ -76,6 +124,7 @@ class _RecordState extends State<Record> {
                         onSelected: (_) {
                           setState(() {
                             _choiceIndex = 3;
+                            _mealTypeController.text = "dinner"; // 選択した値をコントローラーに設定
                           });
                         },
                       ),
@@ -93,19 +142,6 @@ class _RecordState extends State<Record> {
                   ),
                 ),
                 const SizedBox(height: 30),
-                // 食事時間入力フィールド
-                // TextField(
-                //   controller: _mealTimeController, // コントローラを追加
-                //   keyboardType: TextInputType.number, //数値のキーボードを表示
-                //   inputFormatters: [FilteringTextInputFormatter.digitsOnly], //入力できる文字を数値のみに制限
-                //   decoration: const InputDecoration(
-                //     prefixIcon: Icon(Icons.schedule),
-                //     labelText: '食事時間',
-                //     border: OutlineInputBorder(),
-                //     filled: true,
-                //     fillColor: Color(0xFFF7FFd8),
-                //   ),
-                // ),
                 Stack(
                   alignment: Alignment.center,
                   children: [
@@ -157,6 +193,18 @@ class _RecordState extends State<Record> {
                   margin: const EdgeInsets.only(right: 35),
                   child: Image.asset(
                     'images/abatar.png',
+                  ),
+                ),
+                // 登録ボタン
+                SizedBox(
+                  width: double.infinity, // ボタンが横幅いっぱいになる
+                  child: ElevatedButton(
+                    onPressed: _record, // ボタン押下時にサインアップ処理を呼び出す
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFF9FACA), // ボタンの背景色
+                      foregroundColor: const Color(0xFF4b4b4b), // ボタンのテキストカラー
+                    ),
+                    child: const Text('記録する'),
                   ),
                 ),
               ],

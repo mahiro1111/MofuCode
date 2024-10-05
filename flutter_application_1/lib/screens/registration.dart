@@ -21,6 +21,25 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _heightController = TextEditingController();
   final TextEditingController _genderController = TextEditingController();
 
+  Future<String> getCsrfToken() async {
+    try {
+      final response = await http.get(
+        Uri.parse('http://b316-124-141-217-229.ngrok-free.app/users/csrf_token'),
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        return responseData['csrf_token'];
+      } else {
+        print('CSRFトークンの取得に失敗しました: ${response.statusCode}, ${response.body}');
+        throw Exception('CSRFトークンの取得に失敗しました: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('エラーが発生しました: $e');
+      throw Exception('エラーが発生しました: $e');
+    }
+  }
+
   // APIにデータを送信する関数
   Future<void> _signup() async {
     final String name = _nameController.text;
@@ -32,14 +51,18 @@ class _SignupScreenState extends State<SignupScreen> {
     final String gender = _genderController.text;
 
     // APIのURL
-    const apiUrl = 'https://1813-124-141-217-229.ngrok-free.app//sessions';
+    const apiUrl = 'https://b316-124-141-217-229.ngrok-free.app/users';
 
     try {
+      // CSRFトークンを取得
+      final csrfToken = await getCsrfToken();
+
       // リクエストボディを作成
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
           "Content-Type": "application/json",
+          "X-CSRF-Token": csrfToken,
         },
         body: jsonEncode({
           "username": name,
@@ -80,7 +103,7 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   bool _isObscure = true;
-  String isSelectedValue = 'male';
+  String? isSelectedValue;
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +150,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   ], //入力できる文字を数値のみに制限
                   decoration: const InputDecoration(
                     prefixIcon: Icon(Icons.mail),
-                    labelText: 'Email',
+                    labelText: 'Eメール',
                     border: OutlineInputBorder(),
                     filled: true,
                     fillColor: Color(0xFFF7FFd8),
@@ -140,7 +163,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   obscureText: _isObscure,
                   decoration: InputDecoration(
                     prefixIcon: const Icon(Icons.key),
-                    labelText: 'Password',
+                    labelText: 'パスワード',
                     suffixIcon: IconButton(
                       // 文字の表示・非表示でアイコンを変える
                       icon: Icon(
@@ -167,7 +190,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   ], //入力できる文字を数値のみに制限
                   decoration: const InputDecoration(
                     prefixIcon: Icon(Icons.person),
-                    labelText: 'Age',
+                    labelText: '年齢',
                     border: OutlineInputBorder(),
                     filled: true,
                     fillColor: Color(0xFFF7FFd8),
@@ -183,7 +206,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   ], //入力できる文字を数値と.のみに制限
                   decoration: const InputDecoration(
                     prefixIcon: Icon(Icons.height),
-                    labelText: 'Height',
+                    labelText: '身長',
                     border: OutlineInputBorder(),
                     filled: true,
                     fillColor: Color(0xFFF7FFd8),
@@ -199,7 +222,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   ], //入力できる文字を数値と.のみに制限
                   decoration: const InputDecoration(
                     prefixIcon: Icon(Icons.monitor_weight),
-                    labelText: 'Weight',
+                    labelText: '体重',
                     border: OutlineInputBorder(),
                     filled: true,
                     fillColor: Color(0xFFF7FFd8),
@@ -222,6 +245,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     SizedBox(
                       width: 300,
                       child: DropdownButton<String>(
+                        hint: const Text('性別'),
                         items: const [
                           DropdownMenuItem(value: 'male', child: Text('男')),
                           DropdownMenuItem(value: 'female', child: Text('女')),
@@ -229,12 +253,13 @@ class _SignupScreenState extends State<SignupScreen> {
                         value: isSelectedValue,
                         onChanged: (String? value) {
                           setState(() {
-                            isSelectedValue = value!;
-                            _genderController.text = value; // 選択した値をコントローラーに設定
+                            isSelectedValue = value; // 選択された値で状態を更新
+                            _genderController.text = value!; // 選択した値をコントローラーに設定
                           });
                         },
                         menuWidth: 347,
                         borderRadius: BorderRadius.circular(5),
+                        underline: Container(),
                       ),
                     ),
                   ]),
