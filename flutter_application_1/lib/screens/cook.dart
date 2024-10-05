@@ -51,8 +51,8 @@ class _CookScreenState extends State<CookScreen> {
     const CharacterImage = 'images/abatar.png';
 
     final comment = Container(
-      margin: const EdgeInsets.only(left: 20.0),
-      padding: const EdgeInsets.all(16.0),
+      margin: const EdgeInsets.only(left: 10.0),
+      padding: const EdgeInsets.all(10.0),
       decoration: BoxDecoration(
         color: Colors.lightBlueAccent,
         borderRadius: BorderRadius.circular(15.0),
@@ -60,6 +60,7 @@ class _CookScreenState extends State<CookScreen> {
       child: Text(
         '''ぼくからのおすすめだよ！''',
         style: const TextStyle(color: Colors.white),
+        softWrap: true,
       ),
     );
 
