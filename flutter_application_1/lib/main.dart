@@ -29,7 +29,7 @@ class Root extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // ログインしていなければログイン画面を表示
     final isLoggedIn = ref.watch(loginStateProvider); // ログイン状態を監視
-    return isLoggedIn ? const HomeScreen() : const LoginScreen(); // 状態に応じて表示を変更
+    return isLoggedIn ? const HomeScreen() : const HomeScreen(); // 状態に応じて表示を変更
   }
 }
 

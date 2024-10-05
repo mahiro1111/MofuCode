@@ -248,7 +248,7 @@ class _HomeState extends State<Home> {
 
                 Positioned(
                   top: 130,
-                  left: -15,
+                  left: 80,
                   child: Image.asset('images/abatar.png'), // ねこちゃん
                 ),
                 Positioned(
