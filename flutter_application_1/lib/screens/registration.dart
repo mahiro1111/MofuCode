@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+//import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -30,13 +32,15 @@ class _SignupScreenState extends State<SignupScreen> {
     final String gender = _genderController.text;
 
     // APIのURL
-    const String apiUrl = "https://divine-stud-infinite.ngrok-free.app/";
+    const apiUrl = 'https://1813-124-141-217-229.ngrok-free.app//sessions';
 
     try {
       // リクエストボディを作成
       final response = await http.post(
         Uri.parse(apiUrl),
-        headers: {"Content-Type": "application/json"},
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: jsonEncode({
           "username": name,
           "email": email,
@@ -52,6 +56,11 @@ class _SignupScreenState extends State<SignupScreen> {
       if (response.statusCode == 201) {
         // 登録成功
         final responseData = jsonDecode(response.body);
+        String token = responseData['token'];
+
+        // トークンをセキュアストレージに保存する（以後のリクエストで使うため）
+        //await const FlutterSecureStorage().write(key: 'auth_token', value: token);
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('登録成功: ${responseData['message']}')),
         );
@@ -70,7 +79,8 @@ class _SignupScreenState extends State<SignupScreen> {
     }
   }
 
-  String isSelectedValue = '男';
+  bool _isObscure = true;
+  String isSelectedValue = 'male';
 
   @override
   Widget build(BuildContext context) {
@@ -111,6 +121,10 @@ class _SignupScreenState extends State<SignupScreen> {
                 // メール入力フィールド
                 TextField(
                   controller: _emailController, // コントローラを追加
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(
+                        RegExp(r'[a-zA-Z0-9@_\-.]')),
+                  ], //入力できる文字を数値のみに制限
                   decoration: const InputDecoration(
                     prefixIcon: Icon(Icons.mail),
                     labelText: 'Email',
@@ -123,19 +137,34 @@ class _SignupScreenState extends State<SignupScreen> {
                 // パスワード入力フィールド
                 TextField(
                   controller: _passwordController, // コントローラを追加
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    prefixIcon: Icon(Icons.key),
+                  obscureText: _isObscure,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.key),
                     labelText: 'Password',
-                    border: OutlineInputBorder(),
+                    suffixIcon: IconButton(
+                      // 文字の表示・非表示でアイコンを変える
+                      icon: Icon(
+                          _isObscure ? Icons.visibility_off : Icons.visibility),
+                      // アイコンがタップされたら現在と反対の状態をセットする
+                      onPressed: () {
+                        setState(() {
+                          _isObscure = !_isObscure;
+                        });
+                      },
+                    ),
+                    border: const OutlineInputBorder(),
                     filled: true,
-                    fillColor: Color(0xFFF7FFd8),
+                    fillColor: const Color(0xFFF7FFd8),
                   ),
                 ),
                 const SizedBox(height: 16),
                 // 年齢入力フィールド
                 TextField(
                   controller: _ageController, // コントローラを追加
+                  keyboardType: TextInputType.number, //数値のキーボードを表示
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly
+                  ], //入力できる文字を数値のみに制限
                   decoration: const InputDecoration(
                     prefixIcon: Icon(Icons.person),
                     labelText: 'Age',
@@ -148,6 +177,10 @@ class _SignupScreenState extends State<SignupScreen> {
                 // 身長入力フィールド
                 TextField(
                   controller: _heightController, // コントローラを追加
+                  keyboardType: TextInputType.number, //数値のキーボードを表示
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9.]'))
+                  ], //入力できる文字を数値と.のみに制限
                   decoration: const InputDecoration(
                     prefixIcon: Icon(Icons.height),
                     labelText: 'Height',
@@ -160,6 +193,10 @@ class _SignupScreenState extends State<SignupScreen> {
                 // 体重入力フィールド
                 TextField(
                   controller: _weightController, // コントローラを追加
+                  keyboardType: TextInputType.number, //数値のキーボードを表示
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9.]'))
+                  ], //入力できる文字を数値と.のみに制限
                   decoration: const InputDecoration(
                     prefixIcon: Icon(Icons.monitor_weight),
                     labelText: 'Weight',
@@ -169,6 +206,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
+                // 性別選択
                 Container(
                   decoration: BoxDecoration(
                       color: const Color(0xFFF7FFd8),
@@ -182,16 +220,17 @@ class _SignupScreenState extends State<SignupScreen> {
                     const Icon(Icons.wc),
                     const SizedBox(width: 12),
                     SizedBox(
-                      width: 330,
+                      width: 300,
                       child: DropdownButton<String>(
                         items: const [
-                          DropdownMenuItem(value: '男', child: Text('男')),
-                          DropdownMenuItem(value: '女', child: Text('女')),
+                          DropdownMenuItem(value: 'male', child: Text('男')),
+                          DropdownMenuItem(value: 'female', child: Text('女')),
                         ],
                         value: isSelectedValue,
                         onChanged: (String? value) {
                           setState(() {
                             isSelectedValue = value!;
+                            _genderController.text = value; // 選択した値をコントローラーに設定
                           });
                         },
                         menuWidth: 347,
