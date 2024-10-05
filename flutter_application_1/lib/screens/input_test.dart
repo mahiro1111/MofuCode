@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 // ButtonScreenで表示するクラス
-class ButtonScreen extends StatefulWidget {
-  const ButtonScreen({super.key});
+class CookScreen extends StatefulWidget {
+  const CookScreen({super.key});
 
   @override
   _ButtonScreenState createState() => _ButtonScreenState();
 }
 
-class _ButtonScreenState extends State<ButtonScreen> {
+class _ButtonScreenState extends State<CookScreen> {
   List<String> recipeTitles = [
     'Recipe 1: Delicious Pancakes',
     'Recipe 2: Healthy Salad',
@@ -209,6 +209,6 @@ class RecipeDetailScreen extends StatelessWidget {
 
 void main() {
   runApp(const MaterialApp(
-    home: ButtonScreen(),
+    home: CookScreen(),
   ));
 }
