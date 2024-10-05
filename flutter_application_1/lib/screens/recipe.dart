@@ -141,8 +141,4 @@ class Cook extends StatelessWidget {
       ),
     );
   }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 9b488122ef783446cf8f8a35b51ebd3288bc687d
