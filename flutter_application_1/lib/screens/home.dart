@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'dart:convert';  // JSONエンコードとデコードのために必要
 import 'package:http/http.dart' as http;  // httpリクエスト用のパッケージ
 import 'package:intl/intl.dart'; // 日付を扱うためのパッケージ
@@ -390,3 +391,5 @@ class BalloonPainter extends CustomPainter {
     return false;
   }
 }
+=======
+>>>>>>> 9b488122ef783446cf8f8a35b51ebd3288bc687d
