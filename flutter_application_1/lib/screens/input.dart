@@ -3,16 +3,17 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 // ButtonScreenで表示するクラス
-class ButtonScreen extends StatefulWidget {
-  const ButtonScreen({super.key});
+class CookScreen extends StatefulWidget {
+  const CookScreen({super.key});
 
   @override
-  _ButtonScreenState createState() => _ButtonScreenState();
+  _CookScreenState createState() => _CookScreenState();
 }
 
-class _ButtonScreenState extends State<ButtonScreen> {
+class _CookScreenState extends State<CookScreen> {
   List<String> recipeTitles = [];
   List<String> recipeContents = [];
+  bool isLoading = true; // ローディング状態を管理する変数
 
   // APIからレシピ情報を取得するメソッド
   Future<void> fetchRecipes() async {
@@ -29,9 +30,13 @@ class _ButtonScreenState extends State<ButtonScreen> {
       setState(() {
         recipeTitles = List<String>.from(data['recipe_titles']); // レシピタイトルを取得
         recipeContents = List<String>.from(data['recipe_contents']); // レシピ詳細を取得
+        isLoading = false; // データ取得完了
       });
     } else {
       print('Failed to load recipes');
+      setState(() {
+        isLoading = false; // エラー発生時もローディングを終了
+      });
     }
   }
 
@@ -43,32 +48,32 @@ class _ButtonScreenState extends State<ButtonScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const CharacterImage='images/abatar.png';
+    const CharacterImage = 'images/abatar.png';
 
-    final comment=Container(
-        margin: const EdgeInsets.only(left: 20.0),
-        padding: const EdgeInsets.all(16.0),
-        decoration: BoxDecoration(
-          color: Colors.lightBlueAccent,
-          borderRadius: BorderRadius.circular(15.0),
-        ),
-        child: Text('''ぼくからのおすすめだよ！''',
-          style: const TextStyle(color: Colors.white),
+    final comment = Container(
+      margin: const EdgeInsets.only(left: 20.0),
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.lightBlueAccent,
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      child: Text(
+        '''ぼくからのおすすめだよ！''',
+        style: const TextStyle(color: Colors.white),
       ),
     );
 
-    final TalkCharacter=Row(
+    final TalkCharacter = Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Image.asset(
           CharacterImage,
           width: 200,
-          height:200 ,
+          height: 200,
         ),
         comment,
       ],
     );
-
 
     return Scaffold(
       appBar: AppBar(title: const Text('Recipe Titles')),
@@ -81,30 +86,32 @@ class _ButtonScreenState extends State<ButtonScreen> {
         ),
         child: Column(
           children: [
-            Expanded( // ここでListView.builderを包む
-              child: ListView.builder(
-                itemCount: recipeTitles.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 16.0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // ボタンが押されたときに詳細画面に遷移
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => RecipeDetailScreen(
-                              title: recipeTitles[index],
-                              content: recipeContents[index],
-                            ),
+            Expanded(
+              child: isLoading // ローディング状態の判定
+                  ? Center(child: CircularProgressIndicator()) // ローディングインジケーターを表示
+                  : ListView.builder(
+                      itemCount: recipeTitles.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 16.0),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              // ボタンが押されたときに詳細画面に遷移
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => RecipeDetailScreen(
+                                    title: recipeTitles[index],
+                                    content: recipeContents[index],
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Text(recipeTitles[index]), // ボタンにレシピのタイトルを表示
                           ),
                         );
                       },
-                      child: Text(recipeTitles[index]), // ボタンにレシピのタイトルを表示
                     ),
-                  );
-                },
-              ),
             ),
             TalkCharacter,
           ],
@@ -123,7 +130,6 @@ class RecipeDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const CharacterImage='images/abatar.png';
 
     return Scaffold(
       appBar: AppBar(title: Text(title)),
@@ -139,7 +145,7 @@ class RecipeDetailScreen extends StatelessWidget {
         ),
         // テキスト部分をスクロール可能にする
         child: Column(
-          children:[
+          children: [
             SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -154,9 +160,9 @@ class RecipeDetailScreen extends StatelessWidget {
                 ),
               ),
             ),
-          ]
+          ],
         ),
-      )
+      ),
     );
   }
 }

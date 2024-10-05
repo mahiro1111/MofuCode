@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screens/input.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_application_1/screens/recipe.dart';
 import 'package:flutter_application_1/screens/nutritional_management/management.dart';
 import 'package:flutter_application_1/screens/pageB.dart';
 import 'package:flutter_application_1/screens/login.dart'; 
@@ -18,7 +17,7 @@ void main() {
 
 // プロバイダー
 final indexProvider = StateProvider((ref) {
-  return 0;
+  return 2;
 });
 
 // ルートウィジェット (ConsumerWidget)
@@ -29,7 +28,7 @@ class Root extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // ログインしていなければログイン画面を表示
     final isLoggedIn = ref.watch(loginStateProvider); // ログイン状態を監視
-    return isLoggedIn ? const Home() : const LoginScreen(); // 状態に応じて表示を変更
+    return isLoggedIn ? const HomeScreen() : const HomeScreen(); // 状態に応じて表示を変更
   }
 }
 
@@ -81,9 +80,9 @@ class HomeScreen extends ConsumerWidget {
     );
 
     const pages = [
-      Cook(),
+      CookScreen(),
       PageB(),
-      PageB(),
+      Home(),
       Management(),
       PageB(),
     ];
