@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 // ButtonScreenで表示するクラス
 class ButtonScreen extends StatefulWidget {
@@ -11,38 +9,84 @@ class ButtonScreen extends StatefulWidget {
 }
 
 class _ButtonScreenState extends State<ButtonScreen> {
-  List<String> recipeTitles = [];
-  List<String> recipeContents = [];
+  List<String> recipeTitles = [
+    'Recipe 1: Delicious Pancakes',
+    'Recipe 2: Healthy Salad',
+    'Recipe 3: Spaghetti Carbonara',
+    'Recipe 4: Grilled Chicken',
+    'Recipe 5: Chocolate Brownies',
+  ];
 
-  // APIからレシピ情報を取得するメソッド
-  Future<void> fetchRecipes() async {
-    final response = await http.get(
-      Uri.parse('https://your_api_url.com/recommend'), // APIのエンドポイント
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer your_access_token", // 認証が必要ならトークンを指定
-      },
-    );
+  List<String> recipeContents = [
+    '''Ingredients:
+- Flour: 200g
+- Eggs: 2
+- Milk: 300ml
+- Sugar: 50g
+- Butter: 20g
 
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      setState(() {
-        recipeTitles = List<String>.from(data['recipe_titles']); // レシピタイトルを取得
-        recipeContents = List<String>.from(data['recipe_contents']); // レシピ詳細を取得
-      });
-    } else {
-      print('Failed to load recipes');
-    }
-  }
+Steps:
+1. Mix flour and sugar in a bowl.
+2. Beat the eggs and add them to the dry ingredients.
+3. Gradually add milk and whisk until smooth.
+4. Heat butter in a pan and cook the pancakes for 2-3 minutes on each side.
+5. Serve with syrup or fruits.''',
 
-  @override
-  void initState() {
-    super.initState();
-    fetchRecipes(); // 初期化時にAPIを呼び出す
-  }
+    '''Ingredients:
+- Lettuce: 100g
+- Tomato: 50g
+- Cucumber: 50g
+- Olive Oil: 2 tbsp
+- Salt: To taste
+
+Steps:
+1. Wash and chop the vegetables.
+2. Toss them in a bowl with olive oil and salt.
+3. Serve immediately.''',
+
+    '''Ingredients:
+- Spaghetti: 200g
+- Eggs: 2
+- Parmesan Cheese: 50g
+- Bacon: 100g
+- Black Pepper: To taste
+
+Steps:
+1. Cook spaghetti according to the package instructions.
+2. Fry the bacon until crispy.
+3. Beat the eggs and mix with grated Parmesan cheese.
+4. Drain the spaghetti and combine with the egg mixture and bacon.
+5. Season with black pepper and serve.''',
+
+    '''Ingredients:
+- Chicken Breast: 200g
+- Olive Oil: 2 tbsp
+- Salt: To taste
+- Black Pepper: To taste
+
+Steps:
+1. Season the chicken with salt and pepper.
+2. Heat the olive oil in a pan and grill the chicken for 5-7 minutes on each side.
+3. Let it rest for a few minutes before serving.''',
+
+    '''Ingredients:
+- Dark Chocolate: 200g
+- Butter: 100g
+- Sugar: 150g
+- Flour: 100g
+- Eggs: 3
+
+Steps:
+1. Melt the chocolate and butter in a heatproof bowl over simmering water.
+2. Stir in sugar, then add the eggs one by one.
+3. Fold in the flour and mix until smooth.
+4. Pour the batter into a baking tin and bake at 180°C for 25-30 minutes.
+5. Let cool before cutting into squares.''',
+  ];
 
   @override
   Widget build(BuildContext context) {
+
     const CharacterImage='images/abatar.png';
 
     final comment=Container(
@@ -123,6 +167,7 @@ class RecipeDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     const CharacterImage='images/abatar.png';
 
     return Scaffold(
@@ -158,5 +203,12 @@ class RecipeDetailScreen extends StatelessWidget {
         ),
       )
     );
+
   }
+}
+
+void main() {
+  runApp(const MaterialApp(
+    home: ButtonScreen(),
+  ));
 }
