@@ -159,7 +159,7 @@ class _HomeState extends State<Home> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Nutrition Checker'),
+          title: const Text('NutriGrow'),
         ),
         body: Stack(
           children: [
