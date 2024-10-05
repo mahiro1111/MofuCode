@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 //献立提示とレシピ表示
-/// 馬のモデルクラス
+/// recipeのモデルクラス
 class Recipe {
   // step数
   final String number;
