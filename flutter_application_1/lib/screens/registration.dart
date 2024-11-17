@@ -31,7 +31,7 @@ class _SignupScreenState extends State<SignupScreen> {
   Future<void> fetchCsrfToken() async {
     try {
       final response =
-        await http.get(Uri.parse('https://your-server-url/csrf_token'));
+        await http.get(Uri.parse('https://localhost:3000/csrf_token'));
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = jsonDecode(response.body);
       setState(() {
@@ -46,60 +46,69 @@ class _SignupScreenState extends State<SignupScreen> {
     }
   }
 
-  // APIにデータを送信する関数
-  Future<void> _signup() async {
-    final String name = _nameController.text;
-    final String email = _emailController.text;
-    final String password = _passwordController.text;
-    final int age = int.parse(_ageController.text);
-    final double weight = double.parse(_weightController.text);
-    final double height = double.parse(_heightController.text);
-    final String gender = _genderController.text;
+ Future<void> _signup() async {
+  // Input validation
+  if (_nameController.text.isEmpty || _emailController.text.isEmpty || _passwordController.text.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('すべてのフィールドを埋めてください')),
+    );
+    return;
+  }
 
-    // APIのURL
-    const apiUrl = 'https://460e-133-203-160-33.ngrok-free.app/users';
+  // Parse values
+  int age;
+  double weight;
+  double height;
 
-    try {
-      // リクエストボディを作成
-      final response = await http.post(
-        Uri.parse(apiUrl),
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRF-Token": _csrfToken,
-        },
-        body: jsonEncode({
-          "username": name,
-          "email": email,
-          "password": password,
-          "age": age,
-          "weight": weight,
-          "height": height,
-          "gender": gender,
-        }),
-      );
+  try {
+    age = int.parse(_ageController.text);
+    weight = double.parse(_weightController.text);
+    height = double.parse(_heightController.text);
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('年齢、体重、身長は数値である必要があります')),
+    );
+    return;
+  }
 
-      // ステータスコードを確認してレスポンスを処理
-      if (response.statusCode == 201) {
-        // 登録成功
-        final responseData = jsonDecode(response.body);
+  // APIのURL
+  const apiUrl = 'http://localhost:3000/users';
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('登録成功: ${responseData['message']}')),
-        );
-      } else {
-        // 登録失敗
-        final responseData = jsonDecode(response.body);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('登録失敗: ${responseData['error']}')),
-        );
-      }
-    } catch (e) {
-      // エラーハンドリング
+  try {
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-Token": _csrfToken,
+      },
+      body: jsonEncode({
+        "username": _nameController.text,
+        "email": _emailController.text,
+        "password_digest": _passwordController.text,
+        "age": age,
+        "weight": weight,
+        "height": height,
+        "gender": isSelectedValue,
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      final responseData = jsonDecode(response.body);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('エラーが発生しました: $e')),
+        SnackBar(content: Text('登録成功: ${responseData['message']}')),
+      );
+    } else {
+      final responseData = jsonDecode(response.body);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('登録失敗: ${responseData['error']}')),
       );
     }
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('エラーが発生しました: $e')),
+    );
   }
+}
 
   bool _isObscure = true;
   String? isSelectedValue;
